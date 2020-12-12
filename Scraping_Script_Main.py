@@ -21,7 +21,7 @@ import re
 import os 
 from sqlalchemy import create_engine
 
-class auth:
+class Auth:
     '''
     Object will take in user's Twitter API consumer key, consumer secret, access secret, and access_token. It will then extract tweets from a selected user, then 
     place it into a database using SQL Alchemy. 
@@ -37,7 +37,7 @@ class auth:
         auth.set_access_token(self.access_token, self.access_token_secret)
         api = tweepy.API(auth,wait_on_rate_limit=True)
 
-    def extract_tweet_attributes(tweet_object):
+    def extract_tweet_attributes(tweet_obj):
         # create empty list
         tweet_list =[]
         # loop through tweet objects
@@ -67,7 +67,22 @@ class auth:
         df = pd.DataFrame(tweet_list) #removed extra columns, which are already rendered 
         return df
 
+    def tweet_extract(self):
+        #enter twitter username
+        username = 'Cleavon_MD'
+        #specify the number of tweets to scrape
+        tweets_clv = api.user_timeline(username, count = 200)
+        wf = extract_tweet_attributes(tweets_clv)
 
+    def push_to_db(self):
+        #add postgre database, login, password, and database
+        engine1 = create_engine('postgresql://postgres:noyS9oud!@localhost:5433/Data_Camp')
+
+        wf.to_sql(
+            'test2', 
+            engine1,
+            index=False # Not copying over the index
+        )
 ## Print time process started to terminal
 
 ## On end: print complete, along with file path that it printed to. 

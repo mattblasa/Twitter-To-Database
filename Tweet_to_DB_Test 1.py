@@ -49,12 +49,19 @@ def extract_tweet_attributes(tweet_object):
     df = pd.DataFrame(tweet_list) #removed extra columns, which are already rendered 
     return df
 
-
-username = 'Cleavon_MD'
-tweets_clv = api.user_timeline(username, count = 200)
-wf = extract_tweet_attributes(tweets_clv)
+def tweet_scrape(username, count=200):
+    tweets_clv = api.user_timeline(username, count = 200)
+    wf = extract_tweet_attributes(tweets_clv)
+    return wf
 
 ### Send to Database ### 
+def send_to_db(username, count = 200, local_path):
+    df = tweet_scrape(username, count)
+    engine = create_engine(local_path)
+    df.wf.to_sql('test2', 
+    engine1,
+    index=False # Not copying over the index
+)
 
 engine1 = create_engine('postgresql://postgres:noyS9oud!@localhost:5433/Data_Camp')
 
