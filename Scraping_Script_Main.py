@@ -3,12 +3,12 @@
 """
 Created on 12/12/2020 
 @author: Matt B.
-Basics of Python Web Scraping: 
-Hi Buddy! This is a kick-off-script to get hands on.
-Script Requirements: Python3, BeautifulSoup, urllib
-I have implemented few basic examples using selenium, Do check them out! This script covers approximately 0.1% of entire
-python web scraping. Here my motive is to get you familiar with the tools that python provides if you forsee your career in 
-web automation.
+The ultimate goal of this is to create a script to scrape a Twitter user's tweets and place it a SQL database. 
+Tools used will be tweepy and sqlalchemy.
+Goal Features: 
+    1. Scrape 200 Tweets from a user chosen Twitter user.
+    2. Clean the Tweets, removing emojis, hashtags, and urls. 
+    3. Push to a SQL database.
   	
 """
 
