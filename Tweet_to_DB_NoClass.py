@@ -50,23 +50,16 @@ def extract_tweet_attributes(tweet_object):
     return df
 
 def tweet_scrape(username, count=200):
-    tweets_clv = api.user_timeline(username, count = 200)
+    username = str(username)
+    tweets_clv = api.user_timeline(username, count)
     wf = extract_tweet_attributes(tweets_clv)
     return wf
 
 ### Send to Database ### 
-def send_to_db(username, count = 200, local_path):
+def send_to_db(local_path, table_name, username, count = 200):
     df = tweet_scrape(username, count)
     engine = create_engine(local_path)
-    df.wf.to_sql('test2', 
-    engine1,
-    index=False # Not copying over the index
-)
+    df.to_sql(table_name, engine, index=False) # Not copying over the index
 
-engine1 = create_engine('postgresql://postgres:noyS9oud!@localhost:5433/Data_Camp')
-
-wf.to_sql(
-    'test2', 
-    engine1,
-    index=False # Not copying over the index
-)
+#Take tweets and puts it in DB
+send_to_db('postgresql://postgres:noyS9oud!@localhost:5432/test', 'test3', 'Cleavon_MD', 200)

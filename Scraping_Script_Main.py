@@ -1,18 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on 12/12/2020 
-@author: Matt B.
-The ultimate goal of this is to create a script to scrape a Twitter user's tweets and place it a SQL database. 
-Tools used will be tweepy and sqlalchemy.
-Goal Features: 
-    1. Scrape 200 Tweets from a user chosen Twitter user.
-    2. Clean the Tweets, removing emojis, hashtags, and urls. 
-    3. Push to a SQL database.
-  	
-"""
-
-
 import tweepy
 import pandas as pd 
 import numpy as np
@@ -21,23 +6,20 @@ import re
 import os 
 from sqlalchemy import create_engine
 
-class Auth:
+class ToDatabase:
     '''
     Object will take in user's Twitter API consumer key, consumer secret, access secret, and access_token. It will then extract tweets from a selected user, then 
     place it into a database using SQL Alchemy. 
     '''
-    def __init__(self, consumer_key, consumer_secret, access_secret, access_token_secret): #may need to add 
+    #set the Twitter API keys
+    def __init__(self, consumer_key, consumer_secret, access_token, access_token_secret): #may need to add 
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
-        self.access_secret = access_secret
+        self.access_token = access_token
         self.access_token_secret = access_token_secret
-    
-    def tweet_obj(self):
-        auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
-        auth.set_access_token(self.access_token, self.access_token_secret)
-        api = tweepy.API(auth,wait_on_rate_limit=True)
-
-    def extract_tweet_attributes(tweet_obj):
+        
+    #Takes in output of tweet objects, and creates a dataframe. 
+    def extract_tweet_attributes(self, tweet_obj):
         # create empty list
         tweet_list =[]
         # loop through tweet objects
@@ -67,22 +49,18 @@ class Auth:
         df = pd.DataFrame(tweet_list) #removed extra columns, which are already rendered 
         return df
 
-    def tweet_extract(self):
-        #enter twitter username
-        username = 'Cleavon_MD'
-        #specify the number of tweets to scrape
-        tweets_clv = api.user_timeline(username, count = 200)
+    #Send Request to API, render as dataframe. 
+    def tweet_scrape(self, username, count=200):
+        username = str(username)
+        auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret) #consumer key 1
+        auth.set_access_token(self.access_token, self.access_token_secret)  #consumer key 2
+        api = tweepy.API(auth,wait_on_rate_limit=True)
+        tweets_clv = api.user_timeline(username, count)
         wf = extract_tweet_attributes(tweets_clv)
-
-    def push_to_db(self):
-        #add postgre database, login, password, and database
-        engine1 = create_engine('postgresql://postgres:noyS9oud!@localhost:5433/Data_Camp')
-
-        wf.to_sql(
-            'test2', 
-            engine1,
-            index=False # Not copying over the index
-        )
-## Print time process started to terminal
-
-## On end: print complete, along with file path that it printed to. 
+        return wf
+    
+    ### Send to Database ### 
+    def send_to_db(self, local_path, table_name, username, count = 200):
+        df = self.tweet_scrape(username, count) #render using tweet_scrape method, refer to self
+        engine = create_engine(local_path) #create SQL engine using SQL Alchemy
+        df.to_sql(table_name, engine, index=False) # Not copying over the index
