@@ -9,10 +9,10 @@ from sqlalchemy import create_engine
 ### Twitter Scraping ###
 
 #consumer keys
-consumer_key = "ZdxXpiZl4OUZwYbkprXXjq3GV"
-consumer_secret = "V3N91XX797pgasujNaCQ9eptopLyzESEFTnoyyZ9BUyUEucRap"
-access_token = "1230175722557169666-0djDhRqeQ3pnFU5onQDdDhxXGxIoTr"
-access_token_secret = "Go6iLi292E2YBOuNH1vJPJuHoFc5xdm3vL2BH98TAFXoZ"
+consumer_key = your_key_here
+consumer_secret = your_key_here
+access_token = your_key_here
+access_token_secret = your_key_here
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth,wait_on_rate_limit=True)
