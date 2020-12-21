@@ -49,7 +49,7 @@ class ToDatabase:
         df = pd.DataFrame(tweet_list) #removed extra columns, which are already rendered 
         return df
 
-    #Send Request to API, render as dataframe. 
+    #Send Request to API, get JSON, render it as a dataframe
     def tweet_scrape(self, username, count=200):
         username = str(username)
         auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret) #consumer key 1
@@ -61,6 +61,6 @@ class ToDatabase:
     
     ### Send to Database ### 
     def send_to_db(self, local_path, table_name, username, count = 200):
-        df = self.tweet_scrape(username, count) #render using tweet_scrape method, refer to self
+        df = self.tweet_scrape(username, count) #store dataframe
         engine = create_engine(local_path) #create SQL engine using SQL Alchemy
         df.to_sql(table_name, engine, index=False) # Not copying over the index
