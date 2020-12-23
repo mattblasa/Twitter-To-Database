@@ -61,5 +61,11 @@ def send_to_db(local_path, table_name, username, count = 200):
     engine = create_engine(local_path)
     df.to_sql(table_name, engine, index=False) # Not copying over the index
 
+### Create CSV from Scraped Tweets 
+def create_csv(username, count = 200):
+    intial_scrape = tweet_scrape(username, count)
+    _csv_ = intial_scrape.to_csv(index = False)
+    #need to add localpath to download the csv. add one into the method 
+    return _csv_ 
 #Take tweets and puts it in DB
 send_to_db('postgresql://postgres:noyS9oud!@localhost:5432/test', 'test3', 'Cleavon_MD', 200)
