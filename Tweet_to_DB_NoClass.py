@@ -67,5 +67,6 @@ def create_csv(username, count = 200):
     _csv_ = intial_scrape.to_csv(index = False)
     #need to add localpath to download the csv. add one into the method 
     return _csv_ 
+    
 #Take tweets and puts it in DB
 send_to_db('postgresql://postgres:noyS9oud!@localhost:5432/test', 'test3', 'Cleavon_MD', 200)
