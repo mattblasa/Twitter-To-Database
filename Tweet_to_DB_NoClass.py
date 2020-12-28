@@ -67,6 +67,20 @@ def create_csv(username, count = 200):
     _csv_ = intial_scrape.to_csv(index = False)
     #need to add localpath to download the csv. add one into the method 
     return _csv_ 
+
+from datetime import datetime
+from threading import Timer
+
+### Run a Script at a Set Time
+def timer(): #Need to test if timing works
+    x=datetime.today()
+    y=x.replace(day=x.day+1, hour=1, minute=0, second=0, microsecond=0) #Set to run at 11 AM CST every day 
+    delta_t=y-x
+
+    secs=delta_t.seconds+1
+
+    t = Timer(secs, hello_world)
+    t.start()
     
 #Take tweets and puts it in DB
 send_to_db('postgresql://postgres:noyS9oud!@localhost:5432/test', 'test3', 'Cleavon_MD', 200)
