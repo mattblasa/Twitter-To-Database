@@ -1,13 +1,71 @@
-import tweepy
+
+'''  _______                _      _____                                
+ |__   __|              | |    / ____|                               
+    | |_      _____  ___| |_  | (___   ___ _ __ __ _ _ __   ___ _ __ 
+    | \ \ /\ / / _ \/ _ \ __|  \___ \ / __| '__/ _` | '_ \ / _ \ '__|
+    | |\ V  V /  __/  __/ |_   ____) | (__| | | (_| | |_) |  __/ |   
+    |_| \_/\_/ \___|\___|\__| |_____/ \___|_|  \__,_| .__/ \___|_|   
+                                                    | |              
+                                                    |_|              
+'''
+
+'''
+This program will run a constant scrape of twitter accounts. Inputs such as user name, number of tweets will be determined by the user. 
+Road Map: 
+1. Save output as CSV on local file path 
+2. Save output as a table within a DB. 
+3. Append new tweets as rows, tweets after the last recorded scrape time. 
+4. Same as #4, but with and added program to check if added rows are duplicates of current rows. (Check on Tweet ID )
+'''
+
 import pandas as pd 
+import pyautogui
+from pynput.keyboard import *
 import numpy as np
-import time 
-import re
 import os 
+import re
 from sqlalchemy import create_engine
+import time 
+import tweepy
 
-### Twitter Scraping ###
 
+# ================================================= Terminal ===================================================== 
+#  ======== settings ========
+delay = 1  # in seconds
+resume_key = Key.f1
+pause_key = Key.f2
+exit_key = Key.esc
+#  ==========================
+
+pause = True
+running = True
+
+def on_press(key):
+    global running, pause
+
+    if key == resume_key:
+        pause = False
+        print("[Resumed]")
+    elif key == pause_key:
+        pause = True
+        print("[Paused]")
+    elif key == exit_key:
+        running = False
+        print("[Exit]")
+
+
+def display_controls():
+    print("// AutoClicker by iSayChris")
+    print("// - Settings: ")
+    print("\t delay = " + str(delay) + ' sec' + '\n')
+    print("// - Controls:")
+    print("\t F1 = Resume")
+    print("\t F2 = Pause")
+    print("\t F3 = Exit")
+    print("-----------------------------------------------------")
+    print('Press F1 to start ...')
+
+# ===================================================== Tweet Scrape ==============================================================
 #consumer keys
 consumer_key = your_key_here
 consumer_secret = your_key_here
@@ -55,12 +113,6 @@ def tweet_scrape(username, count=200):
     wf = extract_tweet_attributes(tweets_clv)
     return wf
 
-### Send to Database ### 
-def send_to_db(local_path, table_name, username, count = 200):
-    df = tweet_scrape(username, count)
-    engine = create_engine(local_path)
-    df.to_sql(table_name, engine, index=False) # Not copying over the index
-
 ### Create CSV from Scraped Tweets 
 def create_csv(username, count = 200):
     intial_scrape = tweet_scrape(username, count)
@@ -68,32 +120,8 @@ def create_csv(username, count = 200):
     #need to add localpath to download the csv. add one into the method 
     return _csv_ 
 
-#Take tweets and puts it in DB
-send_to_db('postgresql://postgres:noyS9oud!@localhost:5432/test', 'test3', 'Cleavon_MD', 200)
-create_csv('Cleavon_MD')
+# ===== Run Program ========
 
-
-# ================== Timer ========================
-# The timer will set when the program will rest 
-'''
-from datetime import datetime
-from threading import Timer
-
-### Run a Script at a Set Time
-def timer(): #Need to test if timing works
-    x=datetime.today()
-    y=x.replace(day=x.day+1, hour=1, minute=0, second=0, microsecond=0) #Set to run at 11 AM CST every day 
-    delta_t=y-x
-
-    secs=delta_t.seconds+1
-
-    t = Timer(secs, hello_world)
-    t.start()
-'''
-
-
-'''
-### Script to run it automatically 
 def main():
     lis = Listener(on_press=on_press)
     lis.start()
@@ -105,7 +133,8 @@ def main():
             pyautogui.PAUSE = delay
     lis.stop()
 
+    df.to_csv(index = False) 
+
 
 if __name__ == "__main__":
     main()
-'''
