@@ -49,9 +49,9 @@ def extract_tweet_attributes(tweet_object):
     df = pd.DataFrame(tweet_list) #removed extra columns, which are already rendered 
     return df
 
-def tweet_scrape(username, count=200):
+def tweet_scrape(username, tweet_count=200):
     username = str(username)
-    tweets_clv = api.user_timeline(username, count)
+    tweets_clv = api.user_timeline(username, count = tweet_count)
     wf = extract_tweet_attributes(tweets_clv)
     return wf
 
