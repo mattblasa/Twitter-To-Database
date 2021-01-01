@@ -50,14 +50,16 @@ class ToDatabase:
         return df
 
     #Send Request to API, get JSON, render it as a dataframe
-    def tweet_scrape(self, username, count=200):
+    def tweet_scrape(self, username, tweet_count=200):
         username = str(username)
         auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret) #consumer key 1
         auth.set_access_token(self.access_token, self.access_token_secret)  #consumer key 2
         api = tweepy.API(auth,wait_on_rate_limit=True)
-        tweets_clv = api.user_timeline(username, count)
+        tweets_clv = api.user_timeline(username, count = tweet_count)
         wf = extract_tweet_attributes(tweets_clv)
         return wf
+
+    
     
     ### Send to Database ### 
     def send_to_db(self, local_path, table_name, username, count = 200):
