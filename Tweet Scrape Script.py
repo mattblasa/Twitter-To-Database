@@ -129,11 +129,11 @@ def main():
     display_controls()
     while running:
         if not pause:
-            pyautogui.click(pyautogui.position())
+            df.to_csv(index = False) 
             pyautogui.PAUSE = delay
     lis.stop()
 
-    df.to_csv(index = False) 
+    
 
 
 if __name__ == "__main__":
